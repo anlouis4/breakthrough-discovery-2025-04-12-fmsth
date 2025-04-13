@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,6 +62,19 @@
             border-radius: 5px;
             font-weight: bold;
             text-align: center;
+        }
+        /* Added for quiz collapsible */
+        .quiz-collapsed {
+            cursor: pointer;
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        #questions {
+            display: none;
         }
     </style>
 </head>
@@ -474,6 +488,7 @@
         // Quiz Logic
         let scores = { analytical: 0, creative: 0, strategic: 0 };
         const selectedAnswers = {};
+        let quizStarted = false;
 
         // Build quiz questions
         function buildQuiz() {
@@ -522,8 +537,36 @@
             });
         }
 
+        // Add start quiz button and collapsed state
+        function initQuiz() {
+            const quizContainer = document.querySelector('.quiz-container');
+            const startButton = document.createElement('div');
+            startButton.className = 'quiz-collapsed';
+            startButton.innerHTML = `
+                <h3 class="text-2xl font-semibold mb-4">Discover Your Brain's Hidden Talents</h3>
+                <p class="mb-8">Answer 10 quick questions to reveal your cognitive superpower and get personalized brain optimization tips.</p>
+                <button class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold">Start Quiz</button>
+            `;
+            
+            // Insert before questions
+            const questionsDiv = document.getElementById('questions');
+            const submitBtn = document.getElementById('submit-quiz');
+            submitBtn.style.display = 'none'; // Hide submit button initially
+            
+            quizContainer.insertBefore(startButton, questionsDiv);
+            
+            // Add click event to start button
+            startButton.querySelector('button').addEventListener('click', function() {
+                questionsDiv.style.display = 'block';
+                startButton.style.display = 'none';
+                submitBtn.style.display = 'block';
+                quizStarted = true;
+            });
+        }
+
         // Initialize quiz
         buildQuiz();
+        initQuiz();
 
         // Handle quiz submission
         document.getElementById('submit-quiz').addEventListener('click', function() {
